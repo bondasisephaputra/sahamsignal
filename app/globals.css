@@ -1,0 +1,298 @@
+@import "tailwindcss";
+
+/* -------------------------------------------------------------------------- */
+/*                              Design tokens                                  */
+/* -------------------------------------------------------------------------- */
+
+@theme {
+  /* Warm-neutral "paper" palette - calm, low glare, reads well for numbers. */
+  --color-paper-50: #fbfaf8;
+  --color-paper-100: #f5f3f0;
+  --color-paper-200: #ebe8e3;
+  --color-paper-300: #dcd7d0;
+  --color-paper-400: #b8b2a9;
+  --color-paper-500: #8d867d;
+  --color-paper-600: #6b645c;
+  --color-paper-700: #4d4741;
+  --color-paper-800: #332e2a;
+  --color-paper-900: #1c1917;
+  --color-paper-950: #0f0d0c;
+
+  /* Accent: deep ink blue, used sparingly for emphasis and focus. */
+  --color-accent-300: #9db4d0;
+  --color-accent-400: #6b8cb4;
+  --color-accent-500: #4a6b94;
+  --color-accent-600: #3a5578;
+  --color-accent-700: #2d425d;
+
+  /* IDX convention: green = naik, red = turun. */
+  --color-naik-50: #eefaf1;
+  --color-naik-100: #d5f2de;
+  --color-naik-200: #aee5c1;
+  --color-naik-500: #1a9d5c;
+  --color-naik-600: #12804a;
+  --color-naik-700: #0d6339;
+
+  --color-turun-50: #fdf0f0;
+  --color-turun-100: #fadcdc;
+  --color-turun-200: #f5b9b9;
+  --color-turun-500: #cc2f3f;
+  --color-turun-600: #ad1f2f;
+  --color-turun-700: #8a1826;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-display), Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-mono-ui), ui-monospace, "SF Mono", Menlo, monospace;
+
+  --radius-card: 0.75rem;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                 Base styles                                 */
+/* -------------------------------------------------------------------------- */
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  border-color: var(--color-paper-200);
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: var(--color-paper-50);
+  color: var(--color-paper-800);
+}
+
+/* Tabular figures everywhere numbers are compared. */
+table,
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                  Utilities                                  */
+/* -------------------------------------------------------------------------- */
+
+/*
+ * Registered with `@utility` (not `@layer components`) so the variants below
+ * can compose them via `@apply` - Tailwind v4 only allows `@apply` against
+ * real utilities.
+ */
+
+@utility card {
+  @apply rounded-xl border border-paper-200 bg-white;
+  box-shadow:
+    0 1px 2px rgb(28 25 23 / 0.04),
+    0 1px 3px rgb(28 25 23 / 0.03);
+}
+
+@utility label {
+  @apply text-[0.6875rem] font-medium uppercase tracking-[0.09em] text-paper-500;
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-3.5 py-2
+         text-sm font-medium transition-colors duration-150
+         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-400
+         focus-visible:ring-offset-2 focus-visible:ring-offset-paper-50
+         disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+@utility btn-primary {
+  @apply btn bg-paper-900 text-paper-50 hover:bg-paper-800 active:bg-paper-950;
+}
+
+@utility btn-secondary {
+  @apply btn border border-paper-300 bg-white text-paper-700 hover:bg-paper-100;
+}
+
+@utility btn-ghost {
+  @apply btn text-paper-600 hover:bg-paper-100 hover:text-paper-900;
+}
+
+@utility btn-danger {
+  @apply btn border border-turun-200 bg-turun-50 text-turun-700 hover:bg-turun-100;
+}
+
+@utility btn-sm {
+  @apply px-2.5 py-1.5 text-xs;
+}
+
+@utility input {
+  @apply w-full rounded-lg border border-paper-300 bg-white px-3.5 py-2.5
+         text-sm text-paper-900 placeholder:text-paper-400
+         focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500/20
+         disabled:cursor-not-allowed disabled:bg-paper-100;
+}
+
+@utility select {
+  @apply input cursor-pointer appearance-none bg-no-repeat pr-9;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238d867d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-position: right 0.7rem center;
+}
+
+@utility badge {
+  @apply inline-flex items-center gap-1 rounded-md px-2 py-0.5
+         text-[0.6875rem] font-semibold uppercase tracking-wide;
+}
+
+@utility badge-strong-buy {
+  @apply badge bg-naik-600 text-white;
+}
+
+@utility badge-buy {
+  @apply badge bg-naik-50 text-naik-700 ring-1 ring-inset ring-naik-200;
+}
+
+@utility badge-neutral {
+  @apply badge bg-paper-100 text-paper-600 ring-1 ring-inset ring-paper-300;
+}
+
+@utility badge-sell {
+  @apply badge bg-turun-50 text-turun-700 ring-1 ring-inset ring-turun-200;
+}
+
+@utility badge-strong-sell {
+  @apply badge bg-turun-600 text-white;
+}
+
+@utility table-base {
+  @apply w-full border-collapse text-sm;
+}
+
+@utility card-header {
+  @apply flex items-center justify-between gap-3 border-b border-paper-200 px-5 py-4;
+}
+
+@utility card-title {
+  @apply font-display text-base font-semibold tracking-tight text-paper-900;
+}
+
+@utility up {
+  @apply text-naik-600;
+}
+
+@utility down {
+  @apply text-turun-600;
+}
+
+@utility flat {
+  @apply text-paper-500;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                          Plain CSS (no @apply)                              */
+/* -------------------------------------------------------------------------- */
+
+.table-base thead th {
+  @apply label border-b border-paper-200 px-4 py-3 text-left whitespace-nowrap;
+}
+
+.table-base tbody td {
+  border-bottom: 1px solid var(--color-paper-100);
+  padding: 0.75rem 1rem;
+  vertical-align: middle;
+}
+
+.table-base tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table-base tbody tr {
+  transition: background-color 150ms ease;
+}
+
+.table-base tbody tr:hover {
+  background-color: var(--color-paper-50);
+}
+
+/* Chart primitives */
+.grid-line {
+  stroke: var(--color-paper-200);
+  stroke-width: 1;
+}
+
+.axis-text {
+  fill: var(--color-paper-500);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Subtle pulse for the "market open" indicator. */
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+.live-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  animation: fade-up 0.25s ease-out both;
+}
+
+/* Respect users who prefer reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Slim, unobtrusive scrollbars inside panels. */
+.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-paper-300) transparent;
+}
+
+.thin-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.thin-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--color-paper-300);
+  border-radius: 9999px;
+}
+
+.thin-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Hide the native marker on <details> styled as a disclosure row. */
+details > summary {
+  list-style: none;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
